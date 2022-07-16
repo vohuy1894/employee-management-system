@@ -1,5 +1,8 @@
 package com.example.backend.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +23,12 @@ public class EmployeeServiceImpl implements EmployeeService{
         BeanUtils.copyProperties(employeeModel, employeeEntity);
         employeeRepository.save(employeeEntity);
         return employeeModel;
+    }
+
+    @Override
+    public List<EmployeeModel> getAllEmployees(){
+        List<EmploymentEntity> employeeEntity = employeeRepository.findAll();
+        List<EmployeeModel> employees = employeeEntity.stream().map(emp -> new EmployeeModel(emp.getId(), emp.getEmailId(), emp.getFirstName(), emp.getLastName())).collect(Collectors.toList());
+        return employees;
     }
 }
