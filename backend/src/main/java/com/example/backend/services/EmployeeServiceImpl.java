@@ -31,4 +31,30 @@ public class EmployeeServiceImpl implements EmployeeService{
         List<EmployeeModel> employees = employeeEntity.stream().map(emp -> new EmployeeModel(emp.getId(), emp.getEmailId(), emp.getFirstName(), emp.getLastName())).collect(Collectors.toList());
         return employees;
     }
+
+    @Override
+    public boolean deleteEmployee(Long id){
+        EmploymentEntity employee = employeeRepository.findById(id).get();
+        employeeRepository.delete(employee);
+        return true;
+    }
+
+    @Override
+    public EmployeeModel getEmployeeById(Long id){
+        EmploymentEntity employeeEntity = employeeRepository.findById(id).get();
+        EmployeeModel employee = new EmployeeModel();
+        BeanUtils.copyProperties(employeeEntity, employee);
+        return employee;
+    }
+
+    @Override
+    public EmployeeModel updateEmployee(Long id, EmployeeModel employee){
+        EmploymentEntity employeeEntity = employeeRepository.findById(id).get();
+        employeeEntity.setEmailId(employee.getEmailId());
+        employeeEntity.setFirstName(employee.getFirstName());
+        employeeEntity.setLastName(employee.getLastName());
+        employeeRepository.save(employeeEntity);
+        return employee;
+    }
+    
 }
